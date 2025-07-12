@@ -1,6 +1,8 @@
 const { isEditAllowed, validateEditProfileData } = require("../utils/Helper");
 
 exports.getProfile = async (req, res, next) => {
+  console.log("view profile");
+
   try {
     const user = req.user; // User is attached to the request object by the auth middleware
     if (!user) {
@@ -14,6 +16,9 @@ exports.getProfile = async (req, res, next) => {
 };
 
 exports.updateProfile = async (req, res, next) => {
+  console.log("update profile");
+
+  
   try {
     if (!validateEditProfileData(req)) {
       throw new Error("Invalid Edit Request");

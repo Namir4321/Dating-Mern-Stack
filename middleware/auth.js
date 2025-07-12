@@ -3,6 +3,7 @@ const User = require("../model/User");
 const cookieParser = require("cookie-parser");
 
 const userAuth = async (req, res, next) => {
+
   try {
     const cookies = req.cookies;
     const { token } = cookies;
@@ -10,7 +11,6 @@ const userAuth = async (req, res, next) => {
     if (!token) {
       throw new Error("You are not authenticated");
     }
-    console.log("Token:", token);
     const decodedToken = await jwt.verify(token, "secret key");
     const { _id } = decodedToken;
     //   Find the user by ID

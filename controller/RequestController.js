@@ -2,12 +2,15 @@ const ConnectionRequest = require("../model/ConnecctionRequest");
 const User = require("../model/User");
 exports.SendConnectionRequest = async (req, res, next) => {
   try {
+    console.log("send connection request");
+
     const fromUserId = req.user._id;
     const toUserId = req.params.toUserId;
     const status = req.params.status;
-
-    const allowedStatuses = ["intrested", "ignored"];
+  console.log(fromUserId, toUserId, status);
+    const allowedStatuses = ["interested", "ignored"];
     if (!allowedStatuses.includes(status)) {
+      console.log(status)
       return res.status(400).json({ error: "Invalid status type" + status });
     }
     const toUser = await User.findById(toUserId);
@@ -40,14 +43,16 @@ exports.SendConnectionRequest = async (req, res, next) => {
       data,
     });
   } catch (err) {
+    console.log(err)
     return res.status(500).json({ error: "Internal server error" });
   }
 };
 
 exports.ReviewConnectionRequest = async (req, res, next) => {
-  try {
-    const loggedInUser = req.user._id;
+  
 
+  try {
+    const loggedInUser = req.user;
     const { requestId, status } = req.params;
     const allowedStatuses = ["accepted", "rejected"];
     if (!allowedStatuses.includes(req.params.status)) {
@@ -71,5 +76,7 @@ exports.ReviewConnectionRequest = async (req, res, next) => {
       message: `You have ${status} the connection request from ${connectionRequest.fromUserId.firstName}`,
       data,
     });
-  } catch (err) {}
+  } catch (err) {
+    console.log(err)
+  }
 };

@@ -5,22 +5,26 @@ const USER_SAFE_DATA = "firstName lastName photoUrl age gender about skills";
 
 exports.RecievedConnectionRequests = async (req, res, next) => {
   try {
+    console.log("recieved connection request")
     const loggedInUser = req.user;
     const connectionRequest = await ConnectionRequest.find({
       toUserId: loggedInUser._id,
-      status: "intrested",
+      status: "interested",
     }).populate("fromUserId", USER_SAFE_DATA);
+    // console.log(connectionRequest)
     res.json({ message: "fetched Data Successfully", data: connectionRequest });
   } catch (err) {
     req.statusCode(400).send("ERROR: " + err.message);
   }
 };
 exports.ReviewAllConnection = async (req, res, next) => {
+  console.log("view connection ");
+
   try {
     const loggedInUser = req.user;
     const connectionRequest = await ConnectionRequest.find({
       $or: [
-        { touserId: loggedInUser._id, status: "accepted" },
+        { toUserId: loggedInUser._id, status: "accepted" },
         { fromUserId: loggedInUser._id, status: "accepted" },
       ],
     })
@@ -38,6 +42,8 @@ exports.ReviewAllConnection = async (req, res, next) => {
   }
 };
 exports.UserFeed = async (req, res, next) => {
+  console.log("view feed");
+console.log(req.user._id)
   try {
     const loggedInUser = req.user;
 

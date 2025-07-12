@@ -26,7 +26,7 @@ exports.SignupUser = async (req, res, next) => {
     });
 
     await user.save();
-    return res.status(201).json("User created successfully");
+    return res.status(200).json("User created successfully");
   } catch (err) {
     console.log(err);
     return res.status(400).json({ message: err.message });
@@ -36,6 +36,7 @@ exports.SignupUser = async (req, res, next) => {
 exports.SigninUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    console.log(req.body)
     const ValidatedFields = await validationWithZodSchema(
       { email, password },
       userSignInSchema
@@ -54,7 +55,9 @@ exports.SigninUser = async (req, res, next) => {
         {
           expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
         });
-      res.send("Login Successful");
+        const userData = user.toObject();
+        delete userData.password;
+      res.json({user:userData,message:"Login Successful"});
     } else {
       throw new Error("Invalid Credentials");
     }
